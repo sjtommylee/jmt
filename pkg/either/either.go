@@ -2,13 +2,13 @@ package either
 
 // Represents the left variant of Either
 type Left[E any] struct {
-	_Tag string
+	Tag  string
 	Left E
 }
 
 // Reprsents the right variant of Either
 type Right[A any] struct {
-	_Tag  string
+	Tag   string
 	Right A
 }
 
@@ -17,20 +17,20 @@ type Either[E any, A any] interface{}
 
 // Creates instance of Left
 func LeftConstructor[E any](value E) *Left[E] {
-	return &Left[E]{_Tag: "Left", Left: value}
+	return &Left[E]{Tag: "Left", Left: value}
 }
 
 // Creates instanece of Right
 func RightConstructor[A any](value A) *Right[A] {
-	return &Right[A]{_Tag: "Right", Right: value}
+	return &Right[A]{Tag: "Right", Right: value}
 }
 
-// isLeft
+// isLeft returns true for Left instances, false otherwise
 func (l *Left[E]) IsLeft() bool {
 	return true
 }
 
-// isRight
+// isRight - returns true for Right instances, false otherwise.
 func (r *Right[A]) IsRight() bool {
-	return true
+	return false
 }

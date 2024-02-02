@@ -21,8 +21,8 @@ func TestRight(t *testing.T) {
 
 	t.Logf("Output: %+v", output)
 
-	if output._Tag != "Right" {
-		t.Errorf("Expected _Tag to be 'Right', got %s", output._Tag)
+	if output.Tag != "Right" {
+		t.Errorf("Expected Tag to be 'Right', got %s", output.Tag)
 	}
 }
 
