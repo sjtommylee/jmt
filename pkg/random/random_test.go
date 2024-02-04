@@ -21,3 +21,37 @@ func TestRandomInt(t *testing.T) {
 		t.Errorf("Result %d is not within the expected range [%d, %d]", result, low, high)
 	}
 }
+
+// /
+func TestRandomBool(t *testing.T) {
+	resultFn := RandomBool()
+	result := resultFn()
+
+	// Unwrap the IO monad by calling the function and compare the result
+	if result != true && result != false {
+		t.Errorf("Probably an impossible error %v", result)
+	}
+}
+
+////
+
+func TestRandomElem(t *testing.T) {
+	elements := []int{1, 2, 3, 4, 5}
+	randomElement := RandomElem(elements)
+	result := randomElement()
+
+	found := false
+
+	for _, v := range elements {
+		if v == result {
+
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		t.Errorf("result %d is not one of the elements in the input slice of %v", result, elements)
+	}
+
+}
