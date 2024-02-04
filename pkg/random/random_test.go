@@ -22,15 +22,16 @@ func TestRandomInt(t *testing.T) {
 	}
 }
 
-
-///
+// /
 func TestRandomBool(t *testing.T) {
-  result := RandomBool()
-  if result != true && result != false {
-    t.Errorf("Probably an impossible error %s", result)
-  } 
-}
+	resultFn := RandomBool()
+	result := resultFn()
 
+	// Unwrap the IO monad by calling the function and compare the result
+	if result != true && result != false {
+		t.Errorf("Probably an impossible error %v", result)
+	}
+}
 
 ////
 
