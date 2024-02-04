@@ -22,6 +22,18 @@ func TestRandomInt(t *testing.T) {
 	}
 }
 
+
+///
+func TestRandomBool(t *testing.T) {
+  result := RandomBool()
+  if result != true && result != false {
+    t.Errorf("Probably an impossible error %s", result)
+  } 
+}
+
+
+////
+
 func TestRandomElem(t *testing.T) {
 	elements := []int{1, 2, 3, 4, 5}
 	randomElement := RandomElem(elements)
