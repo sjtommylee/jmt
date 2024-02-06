@@ -25,6 +25,19 @@ type Ring interface {
 // implements field for type int
 type FieldNumber struct{}
 
+// Equals
+func (f FieldNumber) Equals(x interface{}, y interface{}) bool {
+	// Check if x and y are integers
+	xVal, xOK := x.(int)
+	yVal, yOK := y.(int)
+	if !xOK || !yOK {
+		// If x or y is not an integer, return false
+		return false
+	}
+	// Compare x and y for equality
+	return xVal == yVal
+}
+
 func (f FieldNumber) Zero() interface{} {
 	return 0
 }
