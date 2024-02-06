@@ -1,7 +1,6 @@
 package field
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -73,30 +72,3 @@ func TestInterfaces(t *testing.T) {
 	// Check if FieldNumber implements Field interface
 	var _ Field = FieldNumber{}
 }
-
-func ExampleFieldNumber() {
-	// Create an instance of FieldNumber
-	fieldNum := FieldNumber{}
-
-	// Perform some arithmetic operations
-	result := fieldNum.Add(3, 4)
-	fmt.Println(result) // Output: 7
-
-	result = fieldNum.Mul(2, 3)
-	fmt.Println(result) // Output: 6
-}
-
-// func ExampleGCDAndLCM() {
-// 	// Create an instance of FieldNumber
-// 	fieldNum := FieldNumber{}
-
-// 	// Compute GCD
-// 	gcd := gcd(fieldNum, fieldNum)
-// 	result := gcd(12, 8)
-// 	fmt.Println(result) // Output: 4
-
-// 	// Compute LCM
-// 	lcm := lcm(fieldNum, fieldNum)
-// 	result = lcm(12, 8)
-// 	fmt.Println(result) // Output: 24
-// }

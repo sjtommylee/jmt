@@ -70,6 +70,7 @@ func (f FieldNumber) Mod(x, y interface{}) interface{} {
 	return x.(int) % y.(int)
 }
 
+// euclidean algorithm to find the greatest common divisor of two values
 func gcd(E Eq, field Field) func(x, y interface{}) interface{} {
 	zero := field.Zero()
 	var f func(x, y interface{}) interface{}
