@@ -12,3 +12,10 @@ func Map[E any, A any, B any](e either.Either[E, A], f func(A) B) either.Either[
 		return nil
 	}
 }
+func MapInt(slice []int, f func(int) int) []int {
+	result := make([]int, len(slice))
+	for i, v := range slice {
+		result[i] = f(v)
+	}
+	return result
+}
