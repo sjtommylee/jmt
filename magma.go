@@ -14,9 +14,19 @@ type Endomorphism[A any] func(A) A
 // Magmafunc - helper type
 type MagmaFunc[A any] func(A, A) A
 
-// Reverse - reverses the order of concatenation
-func Reverse[A any](M Magma[A]) {
-	return
+type MagmaInt struct{}
+
+// reverse - reverse the order of concats
+func Reverse[A any](M Magma[A]) Magma[A] {
+	return &reversedMagma[A]{M}
+}
+
+type reversedMagma[A any] struct {
+	M Magma[A]
+}
+
+func (rm *reversedMagma[A]) Concat(first, second A) A {
+	return rm.M.Concat(second, first)
 }
 
 // FilterFirst returns a new Magma instance with the first arg filtered
