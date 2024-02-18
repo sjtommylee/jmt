@@ -34,4 +34,11 @@ var RandomBool = func() IO[bool] {
 }
 
 // returns a function that when called, will produce a random elementfrom the provided non empty array
-func RandomElem() {}
+func RandomElem[A any](as []A) func() A {
+	return func() A {
+		source := rand.NewSource(time.Now().UnixNano())
+		randomGenerator := rand.New(source)
+		index := randomGenerator.Intn(len(as))
+		return as[index]
+	}
+}
