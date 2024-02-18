@@ -1,1 +1,0 @@
-package monoid_test

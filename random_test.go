@@ -1,6 +1,8 @@
 package fn
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestRandom(t *testing.T) {
 	randomValue := Random()
@@ -30,5 +32,15 @@ func TestRandomElem(t *testing.T) {
 	result := RandomElem(as)()
 	if result < 1 || result > 5 {
 		t.Errorf("RandomElem(%v) = %d; want element in %v", as, result, as)
+	}
+}
+
+func TestRandomRange(t *testing.T) {
+	min := 1
+	max := 10
+	randomNumber := RandomRange(min, max)()
+
+	if randomNumber < min || randomNumber > max {
+		t.Errorf("Random number %d is not within range [%d, %d]", randomNumber, min, max)
 	}
 }

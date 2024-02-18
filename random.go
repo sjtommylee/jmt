@@ -12,17 +12,23 @@ var Random IO[float64] = func() float64 {
 	return randomGenerator.Float64()
 }
 
-// generates a random inteer
+// generates a random integer within a specified range
 var RandomInt = func(low, high int) IO[int] {
 	return func() int {
 		source := rand.NewSource(time.Now().UnixNano())
 		randomGenerator := rand.New(source)
-		return low + randomGenerator.Intn(high-low+1)
+		return low + randomGenerator.Intn(high+1-low)
 	}
 }
 
 // returns a random range
-func RandomRange() {}
+var RandomRange = func(min, max int) IO[int] {
+	return func() int {
+		source := rand.NewSource(time.Now().UnixNano())
+		randomGenerator := rand.New(source)
+		return randomGenerator.Intn(max-min+1) + min
+	}
+}
 
 // generates a random boolena value
 var RandomBool = func() IO[bool] {
