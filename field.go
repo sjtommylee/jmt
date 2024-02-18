@@ -2,8 +2,9 @@ package fn
 
 // defines the interface for equality comparison
 
-// defines the interface for a field
+// defines the int	erface for a field
 type Field interface {
+	Eq
 	Ring
 	Degree(a interface{}) int
 	Div(x, y interface{}) interface{}
@@ -67,6 +68,7 @@ func (f FieldNumber) Mod(x, y interface{}) interface{} {
 	return x.(int) % y.(int)
 }
 
+// euclidean algorithm to find the greatest common divisor of two values
 // euclidean algorithm to find the greatest common divisor of two values
 func gcd(E Eq, field Field) func(x, y interface{}) interface{} {
 	zero := field.Zero()
