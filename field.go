@@ -1,9 +1,6 @@
-package field
+package fn
 
 // defines the interface for equality comparison
-type Eq interface {
-	Equals(x, y interface{}) bool
-}
 
 // defines the interface for a field
 type Field interface {
