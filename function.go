@@ -1,31 +1,25 @@
 package fn
 
-// idea 1
-
-type PipeFunc func(interface{}) interface{}
-
-// // pipe
-func Pipe(input interface{}, funcs ...PipeFunc) interface{} {
-	result := input
-	for _, f := range funcs {
-		result = f(result)
-	}
-	return result
+import (
+	"reflect"
+)
+// represents a function with defind input and output types
+type Composable struct {
+	InputType  reflect.Type
+	OutputType reflect.Type
 }
 
-// func add(a int) PipeFunc {
-// 	return func(b interface{}) interface{} {
-// 		return a + b.(int)
-// 	}
-// }
+// input returns the input type of the function via reflect. 
+func (f Composable) Input() reflect.Type {
+	return f.InputType
+}
 
-// func multiply(a int) PipeFunc {
-// 	return func(b interface{}) interface{} {
-// 		return a * b.(int)
-// 	}
-// }
+// output returns the output type of the function via reflect
+func (f Composable) Output() reflect.Type {
+	return f.OutputType
+}
 
-// // actual usage might look like
-// func baz() {
-// 	result := Pipe(1, add(2), multiply(3))
-// }
+// Compose 
+func Mega(fns ...Composable) (Composable, error) {
+
+}
