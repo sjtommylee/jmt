@@ -22,5 +22,5 @@ func (f Composable) Output() reflect.Type {
 
 // Compose
 func Mega(fns ...Composable) (Composable, error) {
-	return ""
+	// return ""
 }
