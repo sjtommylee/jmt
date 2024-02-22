@@ -36,15 +36,34 @@ func TestIsLeft(t *testing.T) {
 	}
 }
 
-func TestIsRight(t *testing.T) {
-	left := LeftConstructor("error")
-	if left.IsRight() {
-		t.Error("Expected IsRight to return false")
+func TestIsLeftRight(t *testing.T) {
+	tests := []struct {
+		name     string
+		value    interface{}
+		expected bool
+	}{
+		{"Left", "error", true},
+		{"Right", 42, false},
 	}
 
-	right := RightConstructor(42)
-	if !right.IsRight() {
-		t.Error("Expected IsRight to return true")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var e Either
+			switch tt.name {
+			case "Left":
+				e = LeftConstructor(tt.value)
+			case "Right":
+				e = RightConstructor(tt.value)
+			}
+
+			if tt.expected != e.IsLeft() {
+				t.Errorf("Expected IsLeft() to return %v, got %v", tt.expected, e.IsLeft())
+			}
+
+			if !tt.expected != e.IsRight() {
+				t.Errorf("Expected IsRight() to return %v, got %v", !tt.expected, e.IsRight())
+			}
+		})
 	}
 }
 
