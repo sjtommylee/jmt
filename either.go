@@ -1,51 +1,48 @@
 package fn
 
-// Represents the left variant of Either
-type Left[E any] struct {
-	Tag   string
-	Value E
+import "fmt"
+
+var (
+	ErrInvalidArgumentId = fmt.Errorf("invalid argument id")
+	ErrMissingArg        = fmt.Errorf("missing argument")
+)
+
+// Either represents a value that can be one of many types.
+type Either struct {
+	argId int
+	args  []interface{}
 }
 
-// Represents the right variant of Either
-type Right[A any] struct {
-	Tag   string
-	Value A
+// NewEither creates a new Either with the specified argument set.
+func NewEither(argId int, args ...interface{}) Either {
+	return Either{
+		argId: argId,
+		args:  args,
+	}
 }
 
-// Either type with left, right variants
-type Either[E any, A any] interface {
-	IsLeft() bool
-	IsRight() bool
-	Left() E
-	Right() A
+// GetArg returns the argument at the specified index.
+func (e Either) GetArg(index int) (interface{}, error) {
+	if index < 0 || index >= len(e.args) {
+		return nil, ErrMissingArg
+	}
+	return e.args[index], nil
 }
 
-// Creates instance of Left
-func LeftConstructor[E any](value E) *Left[E] {
-	return &Left[E]{Tag: "Left", Value: value}
+// IsArg returns true if the argument at the specified index is set.
+func (e Either) IsArg(argId int) bool {
+	return e.argId == argId
 }
 
-// Creates instance of Right
-func RightConstructor[A any](value A) *Right[A] {
-	return &Right[A]{Tag: "Right", Value: value}
-}
-
-// IsLeft returns true for Left instances, false otherwise
-func (l *Left[E]) IsLeft() bool {
-	return true
-}
-
-// IsRight returns true for Right instances, false otherwise.
-func (r *Right[A]) IsRight() bool {
-	return false
-}
-
-// Left returns the value of the Left variant
-func (l *Left[E]) Left() E {
-	return l.Value
-}
-
-// Right returns the value of the Right variant
-func (r *Right[A]) Right() A {
-	return r.Value
+// Match executes the given function for the argument at the specified index.
+func (e Either) Match(argId int, fn func(interface{}) interface{}) (Either, error) {
+	if !e.IsArg(argId) {
+		return e, ErrInvalidArgumentId
+	}
+	arg, err := e.GetArg(argId)
+	if err != nil {
+		return e, err
+	}
+	result := fn(arg)
+	return NewEither(argId, result), nil
 }
