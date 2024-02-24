@@ -33,6 +33,33 @@ func Unpack(fns ...interface{}) ([]reflect.Type, []reflect.Value, error) {
 	return ts, vs, nil
 }
 
+func GetInOutCallers(fnTypes []reflect.Type, fnVals []reflect.Value) (in, out []reflect.Type, callers []Caller, vard bool, err error) {
+	callers = make([]Caller, len(fnTypes))
+
+	for i, fn := range fnTypes {
+		in, out = ExtractIOTypes(fn)
+		vard = fn.IsVariadic()
+		callers[i] = DetermineCaller(vard, fnVals[i])
+
+		if i > 0 {
+			// Check variadic arguments
+			if fn.IsVariadic() {
+				correction, err := CorrectVariadicArgs(in, out, i)
+				if err != nil {
+					return nil, nil, nil, false, err
+				}
+				if correction != nil {
+					callers = append(callers, correction)
+				}
+			} else if len(in) != len(out) {
+				return nil, nil, nil, false, fmt.Errorf("Incorrect argument length at %d: return length %d != argument length %d", i, len(out), len(in))
+			}
+		}
+	}
+
+	return in, out, callers, vard, nil
+}
+
 // extract
 func ExtractIOTypes(fn reflect.Type) ([]reflect.Type, []reflect.Type) {
 	in := make([]reflect.Type, fn.NumIn())
@@ -54,6 +81,7 @@ func DetermineCaller(isVariadic bool, value reflect.Value) Caller {
 	return value.Call
 }
 
+// check variadic arguments,
 func CorrectVariadicArgs(in, out []reflect.Type, fnIdx int) (func([]reflect.Value) []reflect.Value, error) {
 	ln := len(in) - 1
 	if lo := len(out); ln == lo-1 && in[ln] == out[ln] {
