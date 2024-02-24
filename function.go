@@ -1,26 +1,35 @@
 package fn
 
 import (
+	"fmt"
 	"reflect"
 )
 
-// represents a function with defind input and output types
 type Composable struct {
-	InputType  reflect.Type
-	OutputType reflect.Type
+	Function interface{}
 }
 
-// input returns the input type of the function via reflect.
-func (f Composable) Input() reflect.Type {
-	return f.InputType
-}
+func Compose(fns ...interface{}) interface{} {
+	if len(fns) == 0 {
+		return nil
+	}
 
-// output returns the output type of the function via reflect
-func (f Composable) Output() reflect.Type {
-	return f.OutputType
-}
+	var composed interface{}
+	composed = fns[len(fns)-1]
 
-// Compose
-func Mega(fns ...Composable) (Composable, error) {
-	// return ""
+	for i := len(fns) - 2; i >= 0; i-- {
+		fn := fns[i]
+		fnType := reflect.TypeOf(fn)
+		composedType := reflect.TypeOf(composed)
+
+		if fnType.NumOut() != 1 || fnType.Out(0) != composedType.In(0) {
+			return fmt.Errorf("Output type of function %d does not match input type of composed function", i)
+		}
+
+		composed = func(args ...interface{}) interface{} {
+			return reflect.ValueOf(fn).Call([]reflect.Value{reflect.ValueOf(composed.(func(...interface{}) interface{})(args...))})[0].Interface()
+		}
+	}
+
+	return composed
 }

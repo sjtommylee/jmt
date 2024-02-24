@@ -1,29 +1,58 @@
-// Option represents a value that may or may not be present
-// It is used to avid null pointer exceptions, and encourages
-// handling both cases where a value is present (Some), and
-// where it is absent (None)
 package fn
 
-// Option represents a value that may or may not be present.
-
-type Option[T any] interface {
-	// Map applies the given function the value inside the Option
-	// and returns a new Optino with the result
-	Map(func(T) T) Option[T]
+// Option is a container for an optional value of type T.
+// If value exists, Option is of type Some. If the value is absent, Option is of type None.
+type Option[T any] struct {
+	isPresent bool
+	value     T
 }
 
-// some represents a present value
-type Some[T any] struct {
-	Value T
+// Some builds an Option when value is present.
+func Some[T any](value T) Option[T] {
+	return Option[T]{
+		isPresent: true,
+		value:     value,
+	}
 }
 
-func (s Some[T]) Map(fn func(T) T) Option[T] {
-	return Some[T]{Value: fn(s.Value)}
+// None builds an Option when value is absent.
+func None[T any]() Option[T] {
+	return Option[T]{
+		isPresent: false,
+	}
 }
 
-// None represents an absent value
-type None[T any] struct{}
+// Map executes the mapper function if value is present or returns None if absent.
+func (o Option[T]) Map(mapper func(value T) (T, bool)) Option[T] {
+	if o.isPresent {
+		return TupleToOption(mapper(o.value))
+	}
 
-func (n None[T]) Map(fn func(T) T) Option[T] {
-	return n
+	return None[T]()
+}
+
+// FlatMap executes the mapper function if value is present or returns None if absent.
+func (o Option[T]) FlatMap(mapper func(value T) Option[T]) Option[T] {
+	if o.isPresent {
+		return mapper(o.value)
+	}
+
+	return None[T]()
+}
+
+// Match executes the first function if value is present and second function if absent.
+// It returns a new Option.
+func (o Option[T]) Match(onValue func(value T) (T, bool), onNone func() (T, bool)) Option[T] {
+	if o.isPresent {
+		return TupleToOption(onValue(o.value))
+	}
+	return TupleToOption(onNone())
+}
+
+// TupleToOption builds a Some Option when second argument is true, or None.
+func TupleToOption[T any](value T, ok bool) Option[T] {
+	if ok {
+		return Some(value)
+	}
+	return None[T]()
 }
